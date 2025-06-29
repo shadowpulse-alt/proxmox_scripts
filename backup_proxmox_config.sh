@@ -4,7 +4,7 @@
 
 BACKUP_DIR="/root/proxmox-config-backup"
 DATE=$(date +'%F %H:%M:%S')
-GITHUB_REMOTE="git@github.com:EdR0Z/proxmox-configs.git"
+GITHUB_REMOTE="git@github.com:TON_USER_GITHUB/TON_REPO_GITHUB_DE_BACKUP.git"
 
 # ──────────────── RÉINITIALISATION DU DÉPÔT ────────────────
 

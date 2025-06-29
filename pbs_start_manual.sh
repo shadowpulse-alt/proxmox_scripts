@@ -2,15 +2,15 @@
 #
 # Ajustez les variables suivantes en fonction de votre environnement :
 # Nom du serveur de sauvegarde
-BACKUP_SERVER_NAME=pbs
+BACKUP_SERVER_NAME=NOM_DU_SERVEUR
 # Adresse IP du serveur de sauvegarde
-BACKUP_SERVER_IP=10.0.0.83
+BACKUP_SERVER_IP=IP_DU_SERVEUR
 # Adresse MAC du serveur de sauvegarde
-BACKUP_SERVER_MAC=84:2B:2B:60:B7:8D
+BACKUP_SERVER_MAC=ADDRESSE_MAC_DU_SERVEUR
 # Délai pour laisser le serveur de sauvegarde démarrer
-BACKUP_SERVER_DELAY=130
+BACKUP_SERVER_DELAY=130 # en secondes
 # Nom du datastore de sauvegarde sur le PVE local (pvesm status)
-PVE_BACKUP_DATASTORE=pbs
+PVE_BACKUP_DATASTORE=NOM_DU_DATASTORE
 
 # Ceci est uniquement pour vérifier si le script est exécuté
 echo "Reveil du serveur de sauvegarde : ${BACKUP_SERVER_NAME}"

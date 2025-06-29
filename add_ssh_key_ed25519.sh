@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "=== Installation de sshpass ==="
+apt install sshpass -y
+
 # Demander les informations nécessaires à l'utilisateur
 echo "=== Script pour générer ou ajouter une clé SSH ED25519 à un hôte distant ==="
 

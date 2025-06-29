@@ -4,9 +4,9 @@
 # La VM 103 sera arrêtée en dernier
 
 # Liste des VM à exclure totalement
-EXCLUDED_VMS=("107" "112" "119")
+EXCLUDED_VMS=("") # Exemple : "107" "112" "119"
 # VM à traiter en dernier
-LAST_VM="103"
+LAST_VM="" # Exemple : "103"
 
 is_excluded() {
     # Vérifie si le VMID passé en paramètre est dans la liste des exclusions
@@ -20,12 +20,12 @@ is_excluded() {
 
 echo "Arrêt des VMs Qemu (exclusion des VMs ${EXCLUDED_VMS[*]} et VM $LAST_VM traitée en dernier)..."
 for vmid in $(qm list | awk 'NR>1 {print $1}'); do
-    # Exclure les VMs 107 et 119
+    # Vérification si la VM est exclue
     if is_excluded "$vmid"; then
         echo "-> VM $vmid est exclue du process."
         continue
     fi
-    # La VM 103 sera traitée en dernier
+    # Vérification si c'est la dernière VM à arrêter
     if [ "$vmid" -eq "$LAST_VM" ]; then
         echo "-> VM $vmid sera arrêtée en dernier."
         continue
@@ -44,9 +44,9 @@ done
 
 # Pause pour permettre un arrêt propre
 echo "Pause de 30 secondes pour l'arrêt propre..."
-sleep 30
+sleep 30   # Pause pour laisser le temps aux VMs et conteneurs de s'arrêter proprement
 
-# Vérification et forçage de l'arrêt pour les VMs restantes (en excluant 107, 119 et 103)
+# Vérification et forçage de l'arrêt pour les VMs toujours actives
 echo "Vérification des VMs encore actives..."
 for vmid in $(qm list | awk 'NR>1 {print $1}'); do
     if is_excluded "$vmid" || [ "$vmid" -eq "$LAST_VM" ]; then
@@ -69,7 +69,7 @@ for ct in $(pct list | awk 'NR>1 {print $1}'); do
     fi
 done
 
-# Arrêt de la VM 103 en dernier
+# Arrêt de la dernière VM spécifiée
 echo "Arrêt de la VM $LAST_VM en dernier..."
 qm shutdown "$LAST_VM"
 echo "Pause de 30 secondes pour l'arrêt de la VM $LAST_VM..."
