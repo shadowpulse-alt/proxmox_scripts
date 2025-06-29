@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Couleurs
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[1;36m'
+RESET='\033[0m'
+
 regex='^10\.0\.0\.[0-9]{1,3}$|^192\.168\.1\.[0-9]{1,3}$'
 
 get_vm_ips() {
@@ -39,7 +46,7 @@ add_tags() {
 
         if [[ $changed -eq 1 ]]; then
             qm set "$vmid" --tags "$final_tags"
-            echo "[QEMU] $vmid : tags ajoutés -> $final_tags"
+            echo -e "${GREEN}[QEMU] $vmid : tags ajoutés -> $final_tags${RESET}"
         fi
         unset tag_hash
     done
@@ -68,7 +75,7 @@ add_tags() {
 
         if [[ $changed -eq 1 ]]; then
             pct set "$vmid" --tags "$final_tags"
-            echo "[LXC] $vmid : tags ajoutés -> $final_tags"
+            echo -e "${GREEN}[LXC] $vmid : tags ajoutés -> $final_tags${RESET}"
         fi
         unset tag_hash
     done
@@ -83,7 +90,7 @@ update_tags() {
             final_tags=""
         fi
         qm set "$vmid" --tags "$final_tags"
-        echo "[QEMU] $vmid : tags mis à jour -> $final_tags"
+        echo -e "${CYAN}[QEMU] $vmid : tags mis à jour -> $final_tags${RESET}"
     done
 
     for vmid in $(pct list | awk 'NR>1 {print $1}'); do
@@ -94,18 +101,18 @@ update_tags() {
             final_tags=""
         fi
         pct set "$vmid" --tags "$final_tags"
-        echo "[LXC] $vmid : tags mis à jour -> $final_tags"
+        echo -e "${CYAN}[LXC] $vmid : tags mis à jour -> $final_tags${RESET}"
     done
 }
 
 delete_tags() {
     for vmid in $(qm list | awk 'NR>1 {print $1}'); do
         qm set "$vmid" --tags ""
-        echo "[QEMU] $vmid : tous les tags supprimés"
+        echo -e "${YELLOW}[QEMU] $vmid : tous les tags supprimés${RESET}"
     done
     for vmid in $(pct list | awk 'NR>1 {print $1}'); do
         pct set "$vmid" --tags ""
-        echo "[LXC] $vmid : tous les tags supprimés"
+        echo -e "${YELLOW}[LXC] $vmid : tous les tags supprimés${RESET}"
     done
 }
 
@@ -120,7 +127,7 @@ manual_tag() {
         tags=$(pct config "$mid" | grep '^tags:' | cut -d' ' -f2- | tr -d ' ')
         setcmd="pct set"
     else
-        echo "Aucune VM ou CT avec l'ID $mid"
+        echo -e "${RED}Aucune VM ou CT avec l'ID $mid${RESET}"
         return
     fi
 
@@ -131,7 +138,7 @@ manual_tag() {
     if [[ -z "${tag_hash["$newtag"]}" ]]; then
         tag_hash["$newtag"]=1
     else
-        echo "Le tag '$newtag' existe déjà sur $kind $mid"
+        echo -e "${YELLOW}Le tag '$newtag' existe déjà sur $kind $mid${RESET}"
         unset tag_hash
         return
     fi
@@ -142,13 +149,13 @@ manual_tag() {
     done
 
     $setcmd "$mid" --tags "$final_tags"
-    echo "[$kind] $mid : tag '$newtag' ajouté. Tags actuels : $final_tags"
+    echo -e "${GREEN}[$kind] $mid : tag '$newtag' ajouté. Tags actuels : $final_tags${RESET}"
     unset tag_hash
 }
 
 while true; do
     echo ""
-    echo "=== Menu gestion des tags IP Proxmox ==="
+    echo -e "${CYAN}=== Menu gestion des tags IP Proxmox ===${RESET}"
     echo "1. Ajouter les tags IP (conserve les autres tags)"
     echo "2. Mettre à jour les tags IP (remplace tous les tags par les IP valides)"
     echo "3. Supprimer tous les tags"
@@ -162,6 +169,6 @@ while true; do
         3) delete_tags ;;
         4) manual_tag ;;
         5) exit 0 ;;        
-        *) echo "Choix invalide." ;;
+        *) echo -e "${RED}Choix invalide.${RESET}" ;;
     esac
 done
