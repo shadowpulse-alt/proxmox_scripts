@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Regex stricte : 10.0.0.x ou 192.168.1.x uniquement
 regex='^10\.0\.0\.[0-9]{1,3}$|^192\.168\.1\.[0-9]{1,3}$'
 
 get_vm_ips() {
@@ -110,6 +109,43 @@ delete_tags() {
     done
 }
 
+manual_tag() {
+    read -rp "ID de la VM ou du LXC : " mid
+    if qm config "$mid" &>/dev/null; then
+        kind="QEMU"
+        tags=$(qm config "$mid" | grep '^tags:' | cut -d' ' -f2- | tr -d ' ')
+        setcmd="qm set"
+    elif pct config "$mid" &>/dev/null; then
+        kind="LXC"
+        tags=$(pct config "$mid" | grep '^tags:' | cut -d' ' -f2- | tr -d ' ')
+        setcmd="pct set"
+    else
+        echo "Aucune VM ou CT avec l'ID $mid"
+        return
+    fi
+
+    read -rp "Tag à ajouter : " newtag
+    IFS=';' read -ra current_tags <<< "$tags"
+    declare -A tag_hash
+    for t in "${current_tags[@]}"; do tag_hash["$t"]=1; done
+    if [[ -z "${tag_hash["$newtag"]}" ]]; then
+        tag_hash["$newtag"]=1
+    else
+        echo "Le tag '$newtag' existe déjà sur $kind $mid"
+        unset tag_hash
+        return
+    fi
+
+    final_tags=""
+    for tag in "${!tag_hash[@]}"; do
+        [[ -z "$final_tags" ]] && final_tags="$tag" || final_tags="$final_tags;$tag"
+    done
+
+    $setcmd "$mid" --tags "$final_tags"
+    echo "[$kind] $mid : tag '$newtag' ajouté. Tags actuels : $final_tags"
+    unset tag_hash
+}
+
 while true; do
     echo ""
     echo "=== Menu gestion des tags IP Proxmox ==="
@@ -117,12 +153,14 @@ while true; do
     echo "2. Mettre à jour les tags IP (remplace tous les tags par les IP valides)"
     echo "3. Supprimer tous les tags"
     echo "4. Quitter"
+    echo "5. Ajouter un tag manuellement à une VM/LXC"
     read -rp "Choix : " choix
     case "$choix" in
         1) add_tags ;;
         2) update_tags ;;
         3) delete_tags ;;
         4) exit 0 ;;
+        5) manual_tag ;;
         *) echo "Choix invalide." ;;
     esac
 done
