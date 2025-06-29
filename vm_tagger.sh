@@ -159,8 +159,8 @@ while true; do
         1) add_tags ;;
         2) update_tags ;;
         3) delete_tags ;;
-        4) exit 0 ;;
-        5) manual_tag ;;
+        4) manual_tag ;;
+        5) exit 0 ;;        
         *) echo "Choix invalide." ;;
     esac
 done
