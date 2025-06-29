@@ -1,3 +1,7 @@
+# Bash script by ShadowPulse
+# Discord: _._shadowpulse_._
+# Don't copy and share this script without my permission.
+
 #!/bin/bash
 
 # Couleurs

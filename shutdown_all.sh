@@ -1,7 +1,9 @@
+# Bash script by ShadowPulse
+# Discord: _._shadowpulse_._
+# Don't copy and share this script without my permission.
+
 #!/bin/bash
 # Script pour un arrêt propre de toutes les VMs (qemu) et des conteneurs (LXC) sur Proxmox
-# Exclusions : VMs 107 et 119 (aucune commande ne leur sera envoyée)
-# La VM 103 sera arrêtée en dernier
 
 # Liste des VM à exclure totalement
 EXCLUDED_VMS=("") # Exemple : "107" "112" "119"
