@@ -31,3 +31,16 @@ cp -r /etc/*       "$BACKUP_DIR/etc/" 2>/dev/null
 git add .
 git commit -m "Backup Proxmox du $DATE"
 git push origin master --force
+
+# ──────────────── NETTOYAGE ────────────────
+rm -rf "$BACKUP_DIR/etc"
+
+# ──────────────── FIN ────────────────
+echo "Backup Proxmox terminé avec succès !"
+echo "Date de sauvegarde : $DATE"
+echo "Dépôt GitHub : $GITHUB_REMOTE"
+echo "Répertoire de sauvegarde : $BACKUP_DIR"
+echo "N'oubliez pas de vérifier le dépôt GitHub pour les changements."
+echo "Script terminé."
+exit 0
+# ──────────────── FIN DU SCRIPT ────────────────
