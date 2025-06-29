@@ -152,8 +152,9 @@ while true; do
     echo "1. Ajouter les tags IP (conserve les autres tags)"
     echo "2. Mettre à jour les tags IP (remplace tous les tags par les IP valides)"
     echo "3. Supprimer tous les tags"
-    echo "4. Quitter"
-    echo "5. Ajouter un tag manuellement à une VM/LXC"
+    echo "4. Ajouter un tag manuellement à une VM/LXC"
+    echo "5. Quitter"
+    
     read -rp "Choix : " choix
     case "$choix" in
         1) add_tags ;;
